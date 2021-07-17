@@ -1,0 +1,150 @@
+* {
+  direction: ltr;
+  text-align: center;
+  margin: 0px;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: monsterrat, sans-serif;
+}
+
+small {
+  font-size: 0.75rem;
+}
+.form-check-label {
+  margin-right: 1rem;
+}
+.form-check-input {
+  position: initial;
+  margin-top: 0rem;
+}
+/* li {
+  margin-right: 10rem;
+} */
+.col {
+  margin-right: 0rem;
+}
+body {
+  background-color: #f7f7f7;
+}
+
+input,
+button {
+  /* appearance: none; */
+  background: none;
+  border: none;
+  outline: none;
+}
+.App {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #53565a;
+}
+form {
+  display: block;
+  position: relative;
+  width: 65%;
+  margin: 1% 20%;
+}
+form::after {
+  /* content: ""; */
+  display: block;
+  position: absolute;
+  top: -0.25vw;
+  left: -0.25vw;
+  right: -0.25vw;
+  bottom: -0.25vw;
+  z-index: 1;
+  border-radius: 10px;
+  background-image: linear-gradient(to bottom right, #ffce00, #fe4880);
+}
+form .form-inner {
+  position: relative;
+  display: block;
+  background-color: #fbfbfb;
+  padding: 30px;
+  border-radius: 10px;
+  z-index: 2;
+}
+form .form-inner h2 {
+  color: #888;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+form .form-inner .form-group {
+  display: block;
+  width: 30%;
+  margin-bottom: 15px;
+  width: 100%;
+}
+.form-inner .form-group label {
+  display: block;
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  transition: 0.5s;
+  text-align: left;
+}
+
+form .form-inner .form-group input {
+  display: block;
+
+  padding: 10px 15px;
+  background-color: rgb(218, 218, 218);
+  border-radius: 10px;
+  transition: 0.5s;
+}
+form .form-inner .form-group input:focus {
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+}
+form button[type="submit"] {
+  display: block;
+
+  border-radius: 10px;
+  background-image: linear-gradient(
+    to right,
+    #ff9e0d 50%,
+    #ffcb00 50%,
+    #fe4880
+  );
+  border-color: inherit;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.5s;
+  font-weight: 700;
+  cursor: pointer;
+  border-color: inherit;
+  text-align: center;
+  width: 13%;
+  margin: auto 45%;
+}
+
+form button[type="submit"]:hover {
+  background-position: 100% 0%;
+}
+@media only screen and (max-width: 700px) {
+  form {
+    width: 90%;
+    margin: 5% 5%;
+  }
+  .form-login {
+    width: 80vw;
+    margin: auto 15%;
+  }
+}
+.input-width {
+  width: 85%;
+}
+@media only screen and (min-width: 500px) {
+  .form-login {
+    width: 40%;
+    margin: auto 30%;
+  }
+}
+.row-guide{
+  justify-content: center;
+  align-items: center;
+  align-content: space-around;
+
+}

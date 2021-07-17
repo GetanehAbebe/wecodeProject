@@ -1,0 +1,14 @@
+.carousel {
+  width: 50%;
+  margin: 1% auto;
+  height: 50%;
+}
+.carousel-item {
+  text-align: center;
+  margin: auto;
+  height: 50%;
+}
+.carousel-item img {
+  position: relative;
+  height: 20rem;
+}
