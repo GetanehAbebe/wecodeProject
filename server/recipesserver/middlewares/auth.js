@@ -3,7 +3,7 @@ const auth = (req, res, next) => {
     console.log('cookies', cookies);
 
     if ('session_id' in cookies) {
-        if (cookies['session_id'] === '123456') next()
+        if (cookies['userId'] === '123321') next()
         else res.status(403).send({ msg: 'Not authenticated' })
     } else res.status(403).send({ msg: 'Not authenticated' })
 }

@@ -14,9 +14,8 @@ const userSchema = Yup.object({
     // .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
     // .required('Password is required'),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Password must match'),
-    // .required('Confirm password is required'),
-    // checkbox: Yup.array().required('required')
+        .oneOf([Yup.ref('password'), null], 'Password must match').required('Confirm password is required'),
+    diet: Yup.array().min(2)
 })
 
 module.exports = userSchema

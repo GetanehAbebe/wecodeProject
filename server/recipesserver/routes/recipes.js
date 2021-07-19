@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require('../models/index')
 const multer = require('multer')
+const validation = require('../middlewares/checkrecipe')
+const recipeSchema = require('../validations/recipeValidation')
 const { order, recipeInfo, categoryOfRecipe, dietOfRecipe,
   ingredientsOfRecipe } = require('../DAL/api');
 
@@ -147,9 +149,39 @@ const mostPopular = async (req, res) => {
 }
 
 const deleteRecipe = async (req, res) => {
-  const recipes = await allRecipes();
-  recipes.filter((item) => item.recipeId !== req.params.recipeId);
-  res.send(recipes);
+  const id = req.params.recipeId
+  const deleteInstructions = Instruction.destroy({
+    where: {
+      recipeId: id
+    }
+  })
+  const deleteCategory = await RecipeCategory.destroy({
+    where: {
+      recipeId: id
+    }
+  })
+  const delteIngredient = await RecipeIngredient.destroy({
+    where: {
+      recipeId: id
+    }
+  })
+  const delteDiet = await RecipeDiet.destroy({
+    where: {
+      recipeId: id
+    }
+  })
+  const dletImage = await Image.destroy({
+    where: {
+      recipeId: id
+    }
+  })
+  const response = await Recipe.destroy({
+    where: {
+      id: id
+    }
+
+  })
+  res.send('deleted')
 };
 
 const recipeIngrediens = async (req, res) => {
@@ -168,10 +200,10 @@ const incrementView = async (req, res) => {
 
 
 router.post("/upload", upload.single('image'), async (req, res) => {
-  console.log(req.file, JSON.parse(req.body.recipe));
+
   const values = JSON.parse(req.body.recipe)
-  const { name, source, userId, description, sourceUrl, views,
-    isPrivate, prepTimeMin = 27 } = values
+  const { name, source, description, sourceUrl, views,
+    isPrivate, prepTimeMin = 27, userId = 88 } = values
   try {
     const response = await Recipe.create({
       name, source, userId, description, sourceUrl, views,
@@ -257,11 +289,7 @@ router.post("/update", upload.single('image'), async (req, res) => {
       recipeId: values.id
     }
   })
-  const destroyImg = await Image.destroy({
-    where: {
-      recipeId: values.id
-    }
-  })
+
 
   for (const prop of values.category) {
     await RecipeCategory.create({ recipeId: values.id, categoryId: prop })
@@ -279,14 +307,23 @@ router.post("/update", upload.single('image'), async (req, res) => {
   for (const prop of values.guide) {
     await Instruction.create({ recipeId: values.id, instruction: prop.instruction })
   }
-  const imageresponse = await Image.create({ recipeId: values.id, url: `uploads/${req.file.filename}` })
-  res.send(imageresponse)
+  if (req.file) {
+    const destroyImg = await Image.destroy({
+      where: {
+        recipeId: values.id
+      }
+    })
+    const imageresponse = await Image.create({ recipeId: values.id, url: `uploads/${req.file.filename}` })
+  }
+
+  res.send('updated')
 
 })
 
 
+router.route("/").get(getAllRecipes)
+  .post(validation(recipeSchema), getSpecificRecipe)
 
-router.route("/").get(getAllRecipes).post(getSpecificRecipe);
 router.route("/getRecipe").post(awaitToRcipe);
 router.route("/increment").post(incrementView)
 // router.route("/update").post(updateRecipe)
@@ -297,7 +334,8 @@ router.route("/popular").post(mostPopular);
 router.route("/ingredient").post(recipeIngrediens);
 router
   .route("/:recipeId")
-  // .post(updateRecipe)
   .delete(deleteRecipe);
+// .post(updateRecipe)
 
-module.exports = route
+
+module.exports = router;

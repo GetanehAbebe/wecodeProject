@@ -39,18 +39,21 @@ const recipeIngrediens = async (req, res) => {
 // };
 
 const addIngredient = async (req, res) => {
-    const name = req.body.name
-    const ingredients = await getAllingredients();
-    ingredients.push({ userId: 111, firstName: "Basha", lastName: "Alemu" });
-    res.send(ingredients);
+    console.log('ing', req.body);
+    res.send(req.body)
+    const response = await Ingredient.create({
+        name: req.body.name
+    })
+
+
 };
 
 
-router.route("/").get(getAllingredients);
+router.route("/").get(getAllingredients).post(addIngredient);
 router
     .route("/:recipeId")
     .get(recipeIngrediens)
-    .post(addIngredient)
+
 
 
 module.exports = router;
