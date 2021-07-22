@@ -476,7 +476,7 @@ function NewRecipeForm({ match, recipeId, mode }) {
         </Accordion>
         <Row className="text-left">
           <Button type="submit"  >
-            {editMode ? "Edit Recipe" : "Add Recipe"}
+            {editMode ? "Update Recipe" : "Add Recipe"}
           </Button>
         </Row>
       </div>
