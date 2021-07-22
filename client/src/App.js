@@ -5,7 +5,7 @@ import { useState } from "react";
 import Home from "./components/Pages/Home";
 import FormikNewRecipe from './components/forms/FormikNewRecipe'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import RecipePage from './components/Pages/RecipePage'
+import FormikRegister from './components/forms/FormikRegister'
 import RegisterForm from "./components/forms/RegisterForm";
 import NewRecipeForm from "./components/forms/NewRecipeForm";
 import MyRecipes from "./components/Pages/MyRecipes"
@@ -14,14 +14,15 @@ import Cart from "./components/Pages/Cart/Cart";
 import ItemDetails from "./components/utills/ItemDetails";
 import EditRecipe from "./components/forms/EditRecipe";
 import SearchRecipes from "./components/sections/SearchRecipes";
+import Search from './components/Pages/Search'
 import Basket from "./components/Pages/Cart/Basket";
-import Profile from "./components/Pages/Profile";
+import MyFovorites from './components/Pages/MyFavorites'
 import Gallery from "./components/Pages/Gallery";
-import LocalCart from "./components/Pages/Cart/LocalCart";
+import Profile from './components/Pages/Profile'
 import AuthApi from "./components/context/AuthApi";
 import Cookies from 'js-cookie'
 import Details from './components/utills/Details'
-import Form from './components/forms/Image'
+
 const Routes = () => {
   const Auth = useContext(AuthApi)
   // return <Router>
@@ -33,17 +34,20 @@ const Routes = () => {
       {/* </Switch><Route path="/products" exact component={</SearchRecipes>} /> */}
       <Route exact path="/products" ><Gallery /></Route>
       <Route path="/myrecipes" ><MyRecipes /></Route>
-      
+
       <Route path="/page" ><Details /></Route>
-      <Route path="/formik" ><FormikNewRecipe /></Route>
+      <Route path="/formik" ><FormikRegister /></Route>
       <Route path="/new-recipe" component={NewRecipeForm} />
       <Route path="/sign-up" component={RegisterForm} />
       <Route path="/cart/:id" component={Cart} />
       <Route path="/basket" exact component={Basket} />
       <Route path="/products/:id" component={ItemDetails} />
       <Route path="/edit/:id" component={EditRecipe} />
-      <Route path="/new-recipe" conponent={NewRecipeForm} />
-      <Route path="/newcart" component={LocalCart} />
+      <Route path="/myfavorites" component={MyFovorites} />
+      <Route path="/search" component={Search} />
+
+      {/* <Route path="/profile" conponent={Profile} /> */}
+      {/* <Route path="/newcart" component={LocalCart} /> */}
       <ProtectedProfile path='/profile' exact auth={Auth.auth} component={Profile} />
       <ProtectedLogin path='/login' auth={Auth.auth} component={Login} />
     </Switch>

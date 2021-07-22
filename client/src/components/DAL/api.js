@@ -88,7 +88,9 @@ const sendPutReq = (email, password, id) => {
 }
 
 const getSpecificUser = async (id) => {
-  const response = await axios.post(`http://localhost:3200/users/user`, { id })
+  console.log(id);
+
+  const response = await axios.post(`http://localhost:3200/users/getUser`, { id })
   return response.data
 }
 const ingredientsOfRecipe = async (id) => {
@@ -121,6 +123,38 @@ const userRecipes = async (id) => {
   const response = await axios.post(`http://localhost:3200/recipes/myrecipes`, { id })
   return response.data
 }
+const appentIngredient = async (name) => {
+  const response = await axios.post(`http://localhost:3200/ingredients`, { name })
+  return response.data
+}
+const appendUser = async (values) => {
+  const response = await axios.post(`http://localhost:3200/users`, { values })
+  return response.data
+}
+const updateUser = async (values) => {
+  const response = await axios.put(`http://localhost:3200/users`, { values })
+  return response.data
+}
+const destroyRecipe = async (userId, recipeId) => {
+  const response = await axios.post(`http://localhost:3200/recipes/delete`, { userId, recipeId })
+  return response.data
+}
+const addfavorites = async (userId, recipeId) => {
+  const response = await axios.post(`http://localhost:3200/likes`, { userId, recipeId })
+  return response.data
+}
+const getFavorites = async (id) => {
+  const response = await axios.get(`http://localhost:3200/likes/${id}`)
+  return response.data
+
+}
+const deleteFromFavorites = async (userId, recipeId) => {
+  console.log(userId, recipeId);
+
+  const response = await axios.post(`http://localhost:3200/likes/delete`, { userId, recipeId })
+  return response.data
+
+}
 module.exports = {
   getImages,
   getRecipes,
@@ -145,5 +179,10 @@ module.exports = {
   mostPopular,
   uploadRecipe,
   userRecipes,
-  updateRecipe
+  updateRecipe,
+  appentIngredient,
+  appendUser, updateUser, destroyRecipe,
+  addfavorites,
+  getFavorites,
+  deleteFromFavorites
 };

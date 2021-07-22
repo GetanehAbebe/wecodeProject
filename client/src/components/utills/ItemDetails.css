@@ -372,3 +372,11 @@ body {
   object-fit: cover;
   transition: all 0.2s linear;
 }
+.details {
+  background-color: rgba(197, 194, 194, 0.205);
+  text-align: left !important;
+}
+.instructions,
+.ingredients {
+  font-family: cursive;
+}

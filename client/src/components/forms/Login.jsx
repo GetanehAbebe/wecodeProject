@@ -15,8 +15,6 @@ function Login() {
   const [message, setMessage] = useState("");
   const [isLoged, setIsLoged] = useState(false);
   const history = useHistory()
-
-
   function changeInfo(e) {
     if (e.target.name === "email") setEmail(e.target.value);
     if (e.target.name === "password") setPassword(e.target.value);
@@ -32,7 +30,7 @@ function Login() {
         console.log('user response', response);
         Auth.setAuth(true)
         Cookies.set("user", response.id)
-        history.push('/profile')
+        history.push('/myrecipes')
       }
       else {
         setMessage(response.message);

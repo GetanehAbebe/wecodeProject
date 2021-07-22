@@ -9,7 +9,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: false,
+      unique: "name_UNIQUE"
     },
     description: {
       type: DataTypes.STRING(255),
@@ -17,7 +18,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     views: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     uploadDate: {
       type: DataTypes.DATE,
@@ -34,7 +36,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     isPrivate: {
       type: DataTypes.BOOLEAN,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     prepTimeMin: {
       type: DataTypes.INTEGER,
@@ -55,6 +58,14 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "name_UNIQUE",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "name" },
         ]
       },
       {

@@ -34,54 +34,72 @@ function ItemDetails(props) {
   return (
     <>
 
-      {item.recipe && <div className='text-center'>
-        <div className="row mx-2">
-          <div className="col-sm-7">
-            <h1>{item.recipe.name}</h1>
+      {item.recipe && <div className='text-center mt-5'>
+        <div className="row mx-2 mt-3" >
+          <div className="col-sm-12 col-md-6">
+            <h1 className='text-justify mt-2'>{item.recipe.name}</h1>
             <figure>
-              <img src={`http://localhost:3200/${item.images[0]?.url}`} alt="1" />            <figcaption>Shania Pinnata</figcaption>
+              <img src={`http://localhost:3200/${item.images[0]?.url}`} alt={item.recipe.name} />
+              {/* <figcaption>{item.recipe.name}'s image</figcaption> */}
             </figure>
           </div>
-          <div className='col-sm-4'>
-            <p>{item.recipe.description}</p>
-            <ul>
-              <li>🍽 Serves: 4</li>
-              <li>⏱ {item.recipe.prepTimeMin}</li>
-              <li>👨‍🍳 Cook Time: 25 minutes</li>
-              <li>🍝 Total Time: 30 minutes</li>
+          <div className='col-sm-12 mt-5 text-left col-md-5'>
+            <p className='text-left'>{item.recipe.description}</p>
+
+            <p className='text-left'>Categories:</p>
+            <ul className='d-flex text-left'>
+              {item.category?.map(category => {
+                return <li className='mx-2'>{category.name}  </li>
+              })}
             </ul>
+            <p className='text-left'>Diets:</p>
+            <ul className='d-flex'>
+              {item.diet?.map(category => {
+                return <li className='mx-2'>{category.name}  </li>
+              })}
+            </ul>
+            <ul className='text-left'>
+              <li className='text-left'>⏱ preparation time: {item.recipe.prepTimeMin} minutes</li>
+            </ul>
+            <ul className='text-left'>
+              <li className='text-left'><i class="fas fa-calendar-alt"></i> Upload date: {(item.recipe.createdAt).slice(0, 10).split(' ').reverse().join(' ')}</li>
+            </ul>
+
           </div>
         </div>
       </div>
 
       }
+
       <div className='row'>
         <div className="col-sm-5 mx-2">
           <div>
-            <h2>The Ingredients</h2>
-            <ul className="ingredients">
+            <h2 data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Ingredients <i class="fas fa-angle-down"></i></h2>
+            <ul className="ingredients text-left collapse" id='collapseExample'>
               {item.ingredients && item.ingredients.map((ingredient, i) => {
-                return <li key={i}><span>{ingredient.quantity} {ingredient.measureUnit} {ingredient.name}  </span></li>
+                return <li key={i}><span>{ingredient.quantity} {ingredient.id} {ingredient.ingredient}  </span></li>
               })
               }
             </ul>
           </div>
         </div>
         < div className="col-sm-5">
-          <h2>The Process</h2>
-          <p className="tip">Click each stage to strikethrough when complete</p>
-          <ol className="instructions">
+          <h2 data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">Method <i class="fas fa-angle-down"></i></h2>
+
+          <ol className="instructions collapse" id='collapseExample2'>
 
             {item.instructions && item.instructions.map((instruct, i) => {
               return <li key={i}><span>{instruct.instruction}</span></li>
             })
             }
+            {item.recipe && (item.recipe.createdAt).slice(0, 10)}
+            <p className="last">😋 Buon Appetito!</p>
           </ol>
-          <p className="last">😋 Buon Appetito!</p>
+
+
+
         </div>
-        {item.recipe&&(item.recipe.userId == userId) && <Link className="btn btn-primary" to={`/edit/${match.params.id}`}>
-          Edit
-        </Link>}
+
       </div>
     </>
   );

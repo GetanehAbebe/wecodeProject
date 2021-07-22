@@ -25,11 +25,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     recipeId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'recipes',
-        key: 'id'
-      }
+      allowNull: true
     }
   }, {
     sequelize,

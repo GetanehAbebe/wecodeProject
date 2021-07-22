@@ -12,7 +12,7 @@ function CardItem(props) {
           pathname: `${props.path}`, onAdd: { add: `${props.onAdd}` }
 
         }} >
-          <figure className="cards__item__pic-wrap" data-category={props.label}>
+          <figure className="cards__item__pic-wrap" >
             <img
               className="cards__item__img img-fluid mx-auto"
               alt="Travel Image"

@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <div className="footer-container">
+    <div className="footer-container justify-content-center">
       <section class="social-media">
         <div class="social-media-wrap">
           <div class="footer-logo">
             <Link to="/" className="social-logo">
-              Getanio
+             Cook&Eat
               <i class="fab fa-typo3" />
             </Link>
           </div>

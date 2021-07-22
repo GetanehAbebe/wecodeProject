@@ -2,11 +2,16 @@
   padding: 4rem;
   background: #fff;
   text-align: left;
-  background-image: url("https://images.pexels.com/photos/349610/pexels-photo-349610.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+  background-image: linear-gradient(
+    to top left,
+    rgba(20, 20, 20, 0),
+    rgba(75, 75, 75, 0.61)
+  );
 }
 
 h1 {
   text-align: center;
+  font-family:Verdana, Geneva, Tahoma, sans-serif !important;
 }
 
 .cards__container {
@@ -14,13 +19,13 @@ h1 {
   flex-flow: column;
   align-items: center;
   max-width: 1120px;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
 }
 
 .cards__wrapper {
   position: relative;
-  margin: 50px 0 45px;
+  margin: auto;
 }
 
 .cards__items {
@@ -73,7 +78,7 @@ h1 {
   font-size: 12px;
   font-weight: 700;
   color: #fff;
-  background-color: #1f98f4;
+  /* background-color: #1f98f4; */
   box-sizing: border-box;
 }
 
@@ -97,15 +102,16 @@ h1 {
 }
 .cards__item__info {
   padding: 20px 30px 30px;
-  height: 7rem;
-  background-color: rgb(202, 202, 202);
+  height: 4rem;
+  background-color: gray;
+  text-align: center;
 }
 
 .cards__item__text {
   color: #252e48;
   font-size: 18px;
   line-height: 24px;
-  text-align: left;
+  text-align: ceenter !important;
 }
 
 @media only screen and (min-width: 1200px) {
@@ -129,4 +135,8 @@ h1 {
   height: 5rem;
   border: 5px red solid;
 }
-
+.btn-primary {
+  color: #000 !important;
+  background-color:rgb(235, 147, 47) !important;
+  border-color:0px sandybrown solid;
+}

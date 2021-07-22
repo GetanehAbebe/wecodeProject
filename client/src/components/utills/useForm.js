@@ -23,7 +23,6 @@ const useForm = (callback, validate) => {
     } else if (e.target.name == 'category') {
       if (values.category.includes(value)) {
         console.log(values.category);
-
         const newCat = values.category.filter(item => item !== value);
         const category = newCat;
         values.category = category
@@ -34,7 +33,6 @@ const useForm = (callback, validate) => {
         const category = [...values.category]
         setValues({ ...values, category })
       }
-
     } else {
       setValues({ ...values, [name]: value });
     }

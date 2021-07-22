@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import demoData from "./demoData";
-import CardItem from "./CardItem";
+
 import { Form, Col, Row, FormControl } from "react-bootstrap";
 import MyVerticallyCenteredModal from "../utills/Modal";
 import { getData } from '../DAL/api'
@@ -8,7 +7,7 @@ import Pagination from "../utills/Pagination";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import App from "../Pages/Gallery";
 import Cards from "./Cards";
-import classes from './SearchRecipes.module.css'
+import './SearchRecipes.css'
 const fetchData = require('../DAL/api')
 function SearchRecipes(props) {
   console.log('search recipes-->', props);
@@ -47,19 +46,21 @@ function SearchRecipes(props) {
   useEffect(() => { }, [order, searchText]);
 
   return (
-    <div>
-      <Row className="container-fluid m-auto search-bar-dropdown">
+    <div className='w-100'>
+
+      <Row >
         <FormControl
           type="search"
           placeholder="Search"
-          className="mr-2"
+          className='w-100'
           aria-label="Search"
           value={searchText}
           onChange={(e) => handleChange(e.target.value)}
         />
       </Row>
-      <div className={classes.results} >
-        <ul className='search-bar-dropdown w-75 m-auto'>
+
+      <div className='search-bar-dropdown w-100'>
+        <div className='results w-100 m-0' >
           {searchText &&
             data
               .sort((a, b) => (a[order] < b[order] ? -1 : 0))
@@ -85,7 +86,7 @@ function SearchRecipes(props) {
                 );
               })}
 
-        </ul>
+        </div>
       </div>
     </div >
   );

@@ -8,12 +8,16 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     instruction: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(400),
       allowNull: false
     },
     recipeId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'recipes',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -26,6 +30,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "recipeId_fk_idx",
+        using: "BTREE",
+        fields: [
+          { name: "recipeId" },
         ]
       },
     ]

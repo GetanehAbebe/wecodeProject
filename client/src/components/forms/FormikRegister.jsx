@@ -9,17 +9,19 @@ import ErrorMessages from "../utills/ErrorMessages";
 import { FormControl, FormCheck } from 'react-bootstrap'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { TextField } from './TextField';
-import { getData, insertDataToDB } from "../DAL/api";
+import { getData, insertDataToDB, getSpecificUser } from "../DAL/api";
 import * as Yup from 'yup';
+const Cookies = require('js-cookie')
 const axios = require('axios')
-const FormikRegister = ({ recipe, editUser }) => {
+const FormikRegister = ({ id, editUser }) => {
     const [editMode, setEditMode] = useState(false);
     const [diets, setDiets] = useState(null);
+    const [userDetails, setUserdetails] = useState('')
     const [chechboxOption, setCheckboxOption] = useState([])
     const history = useHistory()
 
     useEffect(async () => {
-        if (recipe) setEditMode(true);
+        if (editUser) setEditMode(true);
         const options = []
         const fetchDiets = await getData('diets')
         setDiets(fetchDiets);
@@ -49,13 +51,24 @@ const FormikRegister = ({ recipe, editUser }) => {
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Password must match')
             .required('Confirm password is required'),
-        checkbox: Yup.array().required('required')
+        diet: Yup.array().required('required')
             .min(2, 'must check 2 types')
     })
 
+    useEffect(async () => {
+        const id = Cookies.get('user')
+        if (editUser) {
+            const response = await getSpecificUser(id);
+            console.log(response);
+            setUserdetails(response)
+        }
+
+
+    }, [])
+    console.log(userDetails);
     return (<Formik
         initialValues={{
-            firstName: '',
+            firstName: '' || "get",
             lastName: '',
             email: '',
             password: '',
@@ -79,6 +92,8 @@ const FormikRegister = ({ recipe, editUser }) => {
 
 
         }}>
+
+
         {formik => (
             <div className="form-inner">
                 <h1 className="my-4 font-weight-bold .display-4">Sign Up</h1>
@@ -91,12 +106,11 @@ const FormikRegister = ({ recipe, editUser }) => {
                     <div className='d-flex'>
                         <p className='col-sm-3 text-left'>Favorites</p>{diets && diets.map((diet, i) => {
                             return (<label key={i}>
-                                <Field type="checkbox" name="checkbox" value={'' + diet.id} />
+                                <Field type="checkbox" name="diet" value={'' + diet.id} />
                                 {diet.name}
                             </label>
                             )
                         })}
-
                     </div>
                     <ErrorMessage name='checkbox' />
                     <button className="btn btn-dark mt-3" type="submit" onClick={formik.onSubmit}>Register</button>

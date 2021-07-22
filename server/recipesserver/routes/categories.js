@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require('../models/index');
-const Category = db.categories
+const Category = db.categories;
 
 
-const { getRecipeImages, getDataFromApi } = require('../DAL/api')
 const getAllCategories = async (req, res) => {
     try {
         const response = await Category.findAll()
@@ -14,7 +13,6 @@ const getAllCategories = async (req, res) => {
     }
 }
 
+
 router.route("/").get(getAllCategories)
-
-
 module.exports = router;

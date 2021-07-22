@@ -1,22 +1,15 @@
-video {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: -2;
-}
-
 .hero-container {
-  height: 50vh;
-  width: 97%;
-  margin: auto 1.5%;
+  margin-top: 3.5rem;
+  height: 60vh;
+  width: 100%;
+  /* margin: auto; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
-  object-fit: contain;
-  background-image: url("https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500");
+  /* box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2); */
+  object-fit: cover;
+  background-image: url("https://images.pexels.com/photos/277253/pexels-photo-277253.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
   background-repeat: no-repeat;
   background-size: cover; /* Resize the background image to cover the entire container */
 }
@@ -25,7 +18,6 @@ video {
   color: #fff;
   font-size: 100px;
   margin-top: -100px;
- 
 }
 
 .hero-container > p {
@@ -38,10 +30,13 @@ video {
 
 .hero-btns {
   margin-top: 2rem;
+  font-family: pictograph;
 }
 
 .hero-btns .btn {
-  margin: 6px;
+  margin: 1rem;
+  background: black;
+  font-family: pictograph;
 }
 
 .fa-play-circle {

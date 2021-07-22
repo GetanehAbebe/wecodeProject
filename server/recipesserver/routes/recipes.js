@@ -19,6 +19,7 @@ const RecipeCategory = db.recipecategories;
 const RecipeDiet = db.recipediets;
 const Units = db.measuringunits
 const Favorite = db.favorites;
+const Like = db.likes
 Recipe.hasMany(Image, {
   foreignKey: 'recipeId'
 })
@@ -29,26 +30,28 @@ Recipe.hasMany(Instruction, {
 })
 Instruction.belongsTo(Recipe)
 
-// Recipe.hasMany(Ingredient, {
-//   foreignKey: 'recipeId'
-// })
-// Ingredient.belongsTo(Recipe)
+
+
+Recipe.belongsToMany(Diet, {
+  through: RecipeDiet,
+  foreignKey: 'recipeId',
+  otherKey: 'dietId'
+})
+
 
 Recipe.belongsToMany(Category, {
   through: RecipeCategory,
-  foreignKey: 'categoryId',
+  foreignKey: 'recipeId',
   otherKey: 'categoryId'
 })
 
-
-Recipe.hasMany(RecipeCategory, {
-  foreignKey: 'categoryId',
+Recipe.belongsToMany(Ingredient, {
+  through: RecipeIngredient,
+  foreignKey: 'recipeId',
+  otherKey: 'ingredientId'
 })
-RecipeCategory.belongsTo(Recipe)
-
 
 const getAllRecipes = async (req, res) => {
-  console.log(req);
   try {
     const q = req.query;
     if (q.orderBy) {
@@ -58,8 +61,17 @@ const getAllRecipes = async (req, res) => {
         offset: Number((q.limit) * q.size),
         include: [
           {
-            model: Image, attributes: ['url'],
+            model: Image,
+            attributes: ['url'],
+
           },
+          {
+            model: Ingredient, attributes: ["name"]
+          },
+          {
+            model: Category, attributes: ['name']
+          },
+
         ]
       })
       res.status(200).json(response)
@@ -67,8 +79,19 @@ const getAllRecipes = async (req, res) => {
       const response = await Recipe.findAll({
         include: [
           {
-            model: Image, attributes: ['url'],
+            model: Image,
+            attributes: ["url"]
           },
+          {
+            model: Category,
+          },
+          {
+            model: Diet
+          },
+          {
+            model: Ingredient
+          }
+
         ]
       })
       res.json(response)
@@ -76,10 +99,10 @@ const getAllRecipes = async (req, res) => {
 
   } catch (err) {
     console.log(err);
+    res.send(err)
 
   }
 }
-
 
 const filesStorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -89,20 +112,48 @@ const filesStorageEngine = multer.diskStorage({
     cb(null, Date.now() + '---' + file.originalname,)
   }
 })
+
 const upload = multer({
   storage: filesStorageEngine
 })
 
-
-
+// const ingredientsFields = await queryPromise(`select quantity,mu.name as id, mu.id as 
+// 'measureUnit',i.name as 'ingredient' from recipeingredients as ri join ingredients as i on ri.ingredientId=i.id join measuringunits as mu on
+//   mu.id = ri.unitId where recipeId=${recipeId}`)
+// const dietsFields = await queryPromise(`select name,dietId from recipediets join diets on diets.id=recipediets.dietid where recipeId=${recipeId}`)
 const getSpecificRecipe = async (req, res) => {
+  console.log('body', req.body);
+  req.body.id = 1153
   try {
-    const response = await recipeInfo(req.body.id)
-    res.json(response)
+    const response = await Recipe.findAll({
+      where: {
+        id: req.body.id
+      },
+      include: [
+        {
+          model: Image, attributes: ['url'],
+        },
+        {
+          model: Category,
+        },
+        {
+          model: Diet
+        },
+        {
+          model: Ingredient, attributes: [["name", "ingredient"]],
+
+        },
+        
+
+      ]
+    })
+    res.send(response)
   } catch (err) {
-    res.status(404).send(err)
+    res.send(err)
   }
+
 };
+
 
 const awaitToRcipe = async (req, res) => {
   const response = await recipeInfo(req.body.id)
@@ -138,19 +189,15 @@ const mostPopular = async (req, res) => {
     })
     res.status(200).send(response)
   } catch (err) {
-    console.log(err);
-
     res.status(400).send(err)
 
   }
-
-
-
 }
 
 const deleteRecipe = async (req, res) => {
-  const id = req.params.recipeId
-  const deleteInstructions = Instruction.destroy({
+  const id = req.body.recipeId
+  const userId = req.body.userId
+  const deleteInstructions = await Instruction.destroy({
     where: {
       recipeId: id
     }
@@ -175,6 +222,12 @@ const deleteRecipe = async (req, res) => {
       recipeId: id
     }
   })
+  const destoryLike = await Like.destroy({
+    where: {
+      recipeId: id,
+      userId
+    }
+  })
   const response = await Recipe.destroy({
     where: {
       id: id
@@ -183,6 +236,7 @@ const deleteRecipe = async (req, res) => {
   })
   res.send('deleted')
 };
+
 
 const recipeIngrediens = async (req, res) => {
   const response = await ingredientsOfRecipe(req.body.id)
@@ -198,16 +252,14 @@ const incrementView = async (req, res) => {
 }
 
 
-
 router.post("/upload", upload.single('image'), async (req, res) => {
-
   const values = JSON.parse(req.body.recipe)
   const { name, source, description, sourceUrl, views,
-    isPrivate, prepTimeMin = 27, userId = 88 } = values
+    prepTimeMin = 27, userId = 88 } = values
   try {
     const response = await Recipe.create({
       name, source, userId, description, sourceUrl, views,
-      isPrivate, prepTimeMin
+      prepTimeMin
     })
     const id = response.id
     for (const prop of values.category) {
@@ -216,19 +268,46 @@ router.post("/upload", upload.single('image'), async (req, res) => {
     for (const prop of values.diet) {
       await RecipeDiet.create({ recipeId: id, dietId: prop })
     }
-    for (const prop of values.instructions) {
-      console.log(prop.measureUnit);
-      await RecipeIngredient.create({
-        recipeId: id, ingredientId: prop.ingredient,
-        unitId: prop.measureUnit, quantity: prop.quantity
-      })
-    }
+
     for (const prop of values.guide) {
       await Instruction.create({ recipeId: id, instruction: prop.instruction })
     }
     const imageresponse = await Image.create({ recipeId: id, url: `uploads/${req.file.filename}` })
-    res.send(imageresponse)
 
+    for (const prop of values.instructions) {
+      console.log(prop.measureUnit);
+      // console.log(getId(prop.ingredient), 'awa')
+
+      const check = await Ingredient.findAll({
+        where: {
+          name: prop.ingredient
+        }
+
+      })
+      console.log('check', check[0]);
+      let name = prop.ingredient
+      console.log('props', prop.ingredient);
+
+      if (check.length === 0) {
+        // if (name[name.length - 1] === 's') name = name.slice(0, name.lemgth - 1)
+        // console.log(name);
+
+        const ing = await Ingredient.create({
+          name: name
+        })
+        prop.ingredient = ing.id
+        await RecipeIngredient.create({
+          recipeId: id, ingredientId: ing.id,
+          unitId: prop.measureUnit, quantity: prop.quantity
+        })
+      } else {
+        const a = await RecipeIngredient.create({
+          recipeId: id, ingredientId: check[0].dataValues.id,
+          unitId: prop.measureUnit, quantity: prop.quantity
+        })
+      }
+    }
+    res.send(imageresponse)
   } catch (err) {
     console.log(err);
 
@@ -297,13 +376,13 @@ router.post("/update", upload.single('image'), async (req, res) => {
   for (const prop of values.diet) {
     await RecipeDiet.create({ recipeId: values.id, dietId: prop })
   }
-  for (const prop of values.instructions) {
-    console.log(prop.measureUnit);
-    await RecipeIngredient.create({
-      recipeId: values.id, ingredientId: prop.ingredient,
-      unitId: prop.measureUnit, quantity: prop.quantity
-    })
-  }
+  // for (const prop of values.instructions) {
+  //   console.log(prop.measureUnit);
+  //   await RecipeIngredient.create({
+  //     recipeId: values.id, ingredientId: prop.ingredient,
+  //     unitId: prop.measureUnit, quantity: prop.quantity
+  //   })
+  // }
   for (const prop of values.guide) {
     await Instruction.create({ recipeId: values.id, instruction: prop.instruction })
   }
@@ -315,27 +394,51 @@ router.post("/update", upload.single('image'), async (req, res) => {
     })
     const imageresponse = await Image.create({ recipeId: values.id, url: `uploads/${req.file.filename}` })
   }
+  for (const prop of values.instructions) {
+    console.log('measureUnit', prop.ingredient);
+    // console.log(getId(prop.measureUnit), 'awa')
 
+    const check = await Ingredient.findAll({
+      where: {
+        name: prop.ingredient
+      }
+
+    })
+    console.log('check', check[0]);
+    let name = prop.ingredient
+    console.log('props', prop.ingredient);
+    if (check.length === 0) {
+      const ing = await Ingredient.create({
+        name: prop.ingredient
+      })
+      prop.ingredient = ing.id
+      await RecipeIngredient.create({
+        recipeId: values.id, ingredientId: ing.id,
+        unitId: prop.measureUnit, quantity: prop.quantity
+      })
+    } else {
+      const a = await RecipeIngredient.create({
+        recipeId: values.id, ingredientId: check[0].dataValues.id,
+        unitId: prop.measureUnit, quantity: prop.quantity
+      })
+    }
+  }
   res.send('updated')
 
 })
 
 
 router.route("/").get(getAllRecipes)
-  .post(validation(recipeSchema), getSpecificRecipe)
-
+  .post(getSpecificRecipe)
 router.route("/getRecipe").post(awaitToRcipe);
 router.route("/increment").post(incrementView)
-// router.route("/update").post(updateRecipe)
 router.route("/diet").post(diet);
 router.route("/category").post(category);
 router.route("/myrecipes").post(myRecipes);
 router.route("/popular").post(mostPopular);
 router.route("/ingredient").post(recipeIngrediens);
+router.route('/delete').post(deleteRecipe)
 router
   .route("/:recipeId")
   .delete(deleteRecipe);
-// .post(updateRecipe)
-
-
 module.exports = router;

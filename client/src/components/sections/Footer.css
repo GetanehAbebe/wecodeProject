@@ -5,6 +5,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 3.5rem;
+  bottom: 0px;
+  margin-bottom: 0px;
 }
 
 .footer-subscription {
@@ -110,7 +113,7 @@
   align-items: center;
   width: 90%;
   max-width: 1000px;
-  margin: 40px auto 0 auto;
+  margin: auto auto;
 }
 
 .social-icons {
@@ -160,4 +163,8 @@
 }
 
 @media screen and (max-width: 768px) {
+  .website-rights ,div.social-icons,div.website-rights{
+    display: none;
+    
+  }
 }

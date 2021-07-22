@@ -4,12 +4,18 @@ module.exports = function(sequelize, DataTypes) {
     recipeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      references: {
+        model: 'recipes',
+        key: 'id'
+      }
     },
     dietId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      references: {
+        model: 'diets',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -17,11 +23,16 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: true,
     indexes: [
       {
-        name: "PRIMARY",
-        unique: true,
+        name: "recipeId.fk.2_idx",
         using: "BTREE",
         fields: [
           { name: "recipeId" },
+        ]
+      },
+      {
+        name: "dietId2.fk_idx",
+        using: "BTREE",
+        fields: [
           { name: "dietId" },
         ]
       },

@@ -1,0 +1,33 @@
+.results {
+
+  position: absolute;
+  background-color: hsla(0, 0%, 97%, 0.486);
+ 
+  margin: auto;
+  text-align: center;
+  width: 75%;
+  margin: auto;
+  text-align: center;
+  max-height: 10rem;
+  overflow: auto;
+  background-color: white;
+  text-align: center;
+  z-index: 10;
+}
+
+.results div{
+  width: 100% !important;
+}
+li {
+  color: black;
+}
+.search-bar-dropdown {
+  position: relative;
+  width: 100%;
+  margin: auto ;
+  text-align: justify;
+}
+.mr-2.form-control {
+  height: auto;
+  margin: 1rem auto;
+}

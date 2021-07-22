@@ -20,17 +20,16 @@ const Gallery = ({ onAdd }) => {
 
   }, []);
 
-  
-  return (
-    <div className="container=fluid mt-5 m-auto">
-      <h3 className="text-primary mb-3">Recipes Gallery</h3>
 
+  return (
+    <div className="container=fluid mt-5 m-auto gallery">
+      <p className="mt-5">Enjoy discovering new recipes </p>
       {<ShowAllrecipes
         recipes={recipes}
         loading={loading}
       />
       }
-      
+
 
     </div>
   );

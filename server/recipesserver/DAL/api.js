@@ -75,16 +75,7 @@ const insertRecipeInstructions = async (recipeId, value) => {
     return response
 }
 
-// const insertRecipeDiets = async (recipeId, value) => {
-//     let result = '';
-//     for (const dietId of value) {
-//         result += `(${recipeId},${dietId}),`
-//     }
-//     const list = result.slice(0, result.length - 1)
-//     const query = `insert into recipe_diet(userId,dietId) values${list}`
-//     const response = await queryPromise(query)
-//     return response
-// }
+
 
 const getRecipe = async (recipeId) => {
     const query = `select * from recipes where recipeId=${recipeId}`
@@ -136,21 +127,11 @@ const recipeInfo = async (recipeId) => {
     const categoriesFields = await queryPromise(`select name,categoryId from recipecategories join categories
     on recipecategories.categoryId=id where recipeId=${recipeId}`)
     const instructionsFields = await queryPromise(`select instruction from instructions where recipeId=${recipeId}`)
-    const ingredientsFields = await queryPromise(`select quantity, mu.name as 'mesureUnit',i.name  from recipeingredients as ri join ingredients as i on ri.ingredientId=i.id join measuringunits as mu on
+    const ingredientsFields = await queryPromise(`select quantity,mu.name as id, mu.id as 'measureUnit',i.name as 'ingredient' from recipeingredients as ri join ingredients as i on ri.ingredientId=i.id join measuringunits as mu on
     mu.id = ri.unitId where recipeId=${recipeId}`)
     const dietsFields = await queryPromise(`select name,dietId from recipediets join diets on diets.id=recipediets.dietid where recipeId=${recipeId}`)
     const imagesFields = await queryPromise(`select url from images where recipeId=${recipeId}`)
     console.log(recipeFields);
-
-    // const [recipe, fields] = await db.query(`select recipes.*,users.firstname,users.lastname from recipes join users on 
-    // recipes.userId=users.id where recipes.id=?`, [recipeId])
-    // const [categories, fieldsC] = await db.query(`select name,recipeId from reccipecategories join categories
-    // on recipecategories.categoryId=id where recipeId=${recipeId}`)
-    // const [instructions, fieldsIns] = db.query(`select instruction from instructions where recipeId=${recipeId}`)
-    // const [ingredients, fieldsIng] = db.query(`select quantity mu.name,i.name from recipeingredients as ri join ingredients as i on ri.ingredientId=i.id join measuringunits  as mu on
-    // mu.id=ri.unitId where recipeId=${recipeId}`)
-    // const [diets, fieldsRD] = db.query(`select name,recipeId from recipediets join diets on diets.id=recipediets.dietid where recipeId=${recipeId}`)
-    console.log(recipeFields, categoriesFields, instructionsFields, ingredientsFields, dietsFields);
     recipe.recipe = recipeFields[0]
     recipe.category = categoriesFields
     recipe.instructions = instructionsFields
@@ -160,6 +141,7 @@ const recipeInfo = async (recipeId) => {
     console.log(recipe);
     return (recipe)
 }
+
 const getInstructions = async (recipeId) => {
     const query = `select * from instructions where recipeId=${recipeId}`
     const response = await queryPromise(query)

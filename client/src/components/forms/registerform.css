@@ -4,7 +4,11 @@
   margin: 0px;
   padding: 0;
   box-sizing: border-box;
-  font-family: monsterrat, sans-serif;
+  font-family: inherit;
+}
+.form h1 {
+  color: black;
+  background-color: white;
 }
 
 small {
@@ -34,17 +38,13 @@ button {
   border: none;
   outline: none;
 }
-.App {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #53565a;
-}
+
 form {
   display: block;
   position: relative;
-  width: 65%;
-  margin: 1% 20%;
+  width: 55%;
+  margin: 7% 20%;
+  height: 20vh;
 }
 form::after {
   /* content: ""; */
@@ -61,16 +61,17 @@ form::after {
 form .form-inner {
   position: relative;
   display: block;
-  background-color: #fbfbfb;
-  padding: 30px;
-  border-radius: 10px;
+  background-color: #b8a46367;
+  padding: 1%;
+  border-radius: 1%;
   z-index: 2;
+  border: rgba(128, 128, 128, 0.089) 2px solid;
 }
 form .form-inner h2 {
   color: #888;
   font-size: 2rem;
   font-weight: 500;
-  margin-bottom: 30px;
+  margin-bottom: 1%;
 }
 form .form-inner .form-group {
   display: block;
@@ -79,19 +80,19 @@ form .form-inner .form-group {
   width: 100%;
 }
 .form-inner .form-group label {
+  width: 10rem;
   display: block;
-  color: #666;
+  color: #000;
   font-size: 1.1rem;
-  margin-bottom: 5px;
+  margin-bottom: 0.3%;
   transition: 0.5s;
   text-align: left;
 }
 
 form .form-inner .form-group input {
   display: block;
-
-  padding: 10px 15px;
-  background-color: rgb(218, 218, 218);
+  padding: 1% 1.5%;
+  background-color: #fff;
   border-radius: 10px;
   transition: 0.5s;
 }
@@ -100,8 +101,9 @@ form .form-inner .form-group input:focus {
 }
 form button[type="submit"] {
   display: block;
-
-  border-radius: 10px;
+  width: auto;
+  margin: auto;
+  /* border-radius: 10px; */
   background-image: linear-gradient(
     to right,
     #ff9e0d 50%,
@@ -116,12 +118,16 @@ form button[type="submit"] {
   cursor: pointer;
   border-color: inherit;
   text-align: center;
-  width: 13%;
-  margin: auto 45%;
+
+  margin: auto;
 }
 
 form button[type="submit"]:hover {
   background-position: 100% 0%;
+}
+.form-login {
+  width: 80vw;
+  margin: 20% 15%;
 }
 @media only screen and (max-width: 700px) {
   form {
@@ -130,7 +136,7 @@ form button[type="submit"]:hover {
   }
   .form-login {
     width: 80vw;
-    margin: auto 15%;
+    margin: 20% 15%;
   }
 }
 .input-width {
@@ -139,12 +145,31 @@ form button[type="submit"]:hover {
 @media only screen and (min-width: 500px) {
   .form-login {
     width: 40%;
-    margin: auto 30%;
+    margin: 10% 30%;
   }
 }
-.row-guide{
+.row-guide {
   justify-content: center;
   align-items: center;
   align-content: space-around;
+}
+.new-ing {
+  display: block;
+  margin: 1rem auto;
+  width: 100%;
+}
 
+.new-ing.btn.btn-primary {
+  background-color: green;
+  margin: auto;
+}
+.save-btn {
+  align-self: center;
+}
+.col {
+  align-self: flex-end;
+}
+.instruction div {
+  border: 1px solid black;
+  padding: 1rem auto;
 }

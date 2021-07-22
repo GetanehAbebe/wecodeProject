@@ -5,6 +5,7 @@ import CardItem from "./CardItem";
 import Invitation from "./invitation";
 import SearchRecipes from "./SearchRecipes";
 import { mostPopular } from '../DAL/api'
+import { Link } from 'react-router-dom'
 
 function Cards() {
 
@@ -23,39 +24,42 @@ function Cards() {
   useEffect(async () => {
     const getRecipes = await mostPopular()
     console.log(getRecipes);
-    setFirstSection(getRecipes.slice(0, 3))
+    setFirstSection(getRecipes)
     setSecondSection(getRecipes.slice(3, 6))
   }, [])
 
   return (
     <div className="cards" >
-      <SearchRecipes />
-      <div className="cards__container">
-        {firstSection && <div className="cards__wrapper">
-          <ul className="cards__items">
-            {firstSection.map((recipe, i) => {
-              console.log(recipe.images[0]?.url);
-              return <CardItem
-                src={recipe.images[0] ? `http://localhost:3200/${recipe.images[0].url}` : images[i + 3]}
-                views={recipe.views}
-                text={recipe.name || `${categories[i]} recipes with delicate and precise spices`}
-                label={recipe.categories.length ? recipe.categories.name : categories[i]}
-                path={`/products/${recipe.id}`}
-              />
-            })}
-          </ul>
-          <ul className="cards__items">
-            {secondSection.map((recipe, i) => {
-              console.log(recipe.images);
-              return <CardItem
-                src={recipe.images[0] ? `http://localhost:3200/${recipe.images[0].url}` : images[i]}
-                text={recipe.name || `${categories[i]} recipes with delicate and precise spices`}
-                label={recipe.categories.length ? recipe.categories[0].name : categories[i]}
-                views={recipe.views}
-                path={`/products/${recipe.id}`}
-              />
-            })}
-          </ul>
+      <h1>Feel like a chef</h1>
+      <p>Add, Edit, Share your recipes and Enjoy to discover other's recipes </p>
+      <div className="cards__container mt-5 ">
+        {firstSection && <div className='justify-content-between'>
+
+          {firstSection.map((recipe, i) => {
+            console.log(recipe.images[0]?.url);
+            return <div class="recipe">
+
+              <li> <Link to={`products/${recipe.id}`}>
+                <div class="image">
+                  <img src={recipe.images[0] ? `http://localhost:3200/${recipe.images[0].url} ` : 'https://images.pexels.com/photos/3843282/pexels-photo-3843282.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260'} />
+
+                </div>
+              </Link > </li>
+              <div className='justify-content-between'>
+                <p>{recipe.name.slice(0, 20)}</p>
+                <ul class="media">
+                  <li><i class="fa fa-clock-o m-auto"></i> {recipe.prepTimeMin} <i class="far fa-clock"></i></li>
+                  <li><i class="fa fa-eye"></i> {recipe.views}</li>
+                  <li>  <i class="far fa-calendar-alt"></i> {(recipe.createdAt).slice(5, 10).split('-').reverse().join('-')}</li>
+
+                </ul>
+              </div>
+            </div>
+
+          })}
+
+
+
           <Invitation />
         </div>
         }

@@ -1,15 +1,17 @@
 const Sequelize = require('sequelize');
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   return sequelize.define('recipecategories', {
     recipeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      references: {
+        model: 'recipes',
+        key: 'id'
+      }
     },
     categoryId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
       references: {
         model: 'categories',
         key: 'id'
@@ -21,19 +23,17 @@ module.exports = function (sequelize, DataTypes) {
     timestamps: true,
     indexes: [
       {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "recipeId" },
-          { name: "categoryId" },
-        ]
-      },
-      {
         name: "categoryId_fk_idx",
         using: "BTREE",
         fields: [
           { name: "categoryId" },
+        ]
+      },
+      {
+        name: "recipeId_fk_idx",
+        using: "BTREE",
+        fields: [
+          { name: "recipeId" },
         ]
       },
     ]
