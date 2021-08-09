@@ -14,9 +14,6 @@ const RegisterForm = ({ recipe, editUser }) => {
   const [message, setMessage] = useState('')
   const history = useHistory()
 
-
-
-
   const insertToForm = (user) => {
     console.log('user', user);
     const email = user.email;
@@ -27,19 +24,17 @@ const RegisterForm = ({ recipe, editUser }) => {
     formik.values.password = user.password;
     formik.values.confirmPassword = user.password;
     const arr = []
-    user.favorites.map(item => {
+    user.favorites?.map(item => {
       arr.push(item.DietId)
     })
     formik.values.diet = arr;
 
   }
-
   useEffect(async () => {
     if (editUser) {
       const id = Cookies.get("user")
       setEditMode(true);
       const getUser = await getSpecificUser(id)
-      console.log(getUser);
       insertToForm(getUser)
 
     }
@@ -47,13 +42,12 @@ const RegisterForm = ({ recipe, editUser }) => {
     const fetchDiets = await getData('diets')
     setDiets(fetchDiets.map(item => {
       return {
-        id: ''+item.id,
+        id: '' + item.id,
         name: item.name,
         select: formik.values.diet.includes(item.id)
       }
     }));
   }, []);
-
 
   const formik = useFormik({
     initialValues: {
@@ -63,7 +57,6 @@ const RegisterForm = ({ recipe, editUser }) => {
       password: "",
       diet: [],
       confirmPassword: '',
-
     },
 
     validationSchema: Yup.object({
@@ -82,41 +75,26 @@ const RegisterForm = ({ recipe, editUser }) => {
       confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Password must match')
         .required('Confirm password is required'),
-      diet: Yup.array().required('required')
-        .min(2, 'must check 2 types')
-    })
-    ,
-
+    }),
     onSubmit: async (values) => {
-      // const res = await insertDataToDB('users', formik.values);
-
       const data = new FormData();
       formik.values.id = Cookies.get("user");
       if (!editUser) {
         const response = await appendUser(values)
+        console.log(response)
         history.push('/login')
       } else {
-
         const update = await updateUser(values)
         setMessage('updated')
       }
-
     },
-
   })
-  console.log(formik.values);
-  console.log(diets);
-
-
 
   return (
     <>
-      <Form  onSubmit={formik.handleSubmit}>
+      <Form onSubmit={formik.handleSubmit}>
         <div className="form-inner">
-          <Form.Row className="m-auto text-center">
-            <h1 className="text-center">{editMode ? "Update Profile" : "Registration Page"}</h1>
-
-          </Form.Row>
+          <h1 className="text-center">{editMode ? "Update Profile" : "Registration Page"}</h1>
           {<small>{message}</small>}
           <hr />
           <Form.Group>
@@ -131,7 +109,6 @@ const RegisterForm = ({ recipe, editUser }) => {
               name="firstName"
             />
             {formik.touched.firstName && formik.errors.firstName ? <small className='text-danger'>{formik.errors.firstName} </small> : ""}
-
           </Form.Group>
           <Form.Group>
             <InputCreator
@@ -169,10 +146,8 @@ const RegisterForm = ({ recipe, editUser }) => {
               sign={<i class="fas fa-mail-bulk"></i>}
               onChange={formik.handleChange}
               name="password"
-             
             />
             {formik.touched.password && formik.errors.password ? <small className='text-danger'>{formik.errors.password} </small> : ""}
-
           </Form.Group>
           <Form.Group>
             <InputCreator
@@ -186,39 +161,6 @@ const RegisterForm = ({ recipe, editUser }) => {
               name="confirmPassword"
             />
             {formik.touched.confirmPassword && formik.errors.confirmPassword ? <small className='text-danger'>{formik.errors.confirmPassword} </small> : ""}
-
-          </Form.Group>
-          <Form.Group>
-            <Row>
-              {/* <Col className='col-sm-2'>
-                <label className='text-left d-block'>Favorite diet</label>
-              </Col> */}
-              {/* <Col className="d-flex flex-row flex-wrap col-sm-10 justify-content-center">
-                {diets.length &&
-                  diets.map((diet) => {
-                    return (
-                      <Form.Check
-                        type="checkbox"
-                        label={diet.name}
-                        name={'diet'}
-                        value={''+diet.id}
-                        checked={diet.select}
-                        onChange={(e) => {
-                          let checked = e.target.checked;
-                          setDiets(diets.map(item => {
-                            diet.select = checked;
-                            return item
-                          }))
-                          formik.handleChange(e);
-                        }}
-                      //  {...formik.getFieldProps("diet")}
-                      />
-                    );
-                  })}
-                {formik.touched.diet && formik.errors.diet ? <small className='text-danger'>{formik.errors.diet} </small> : ""}
-
-              </Col> */}
-            </Row>
           </Form.Group>
           {
             <Button type="submit" id="submit" >

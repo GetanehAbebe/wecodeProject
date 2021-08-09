@@ -2,9 +2,7 @@
 const db = require('../models/index');
 const User = db.users
 const validation = (schema) => async (req, res, next) => {
-    const body = req.body
-    console.log('validation', body);
-    
+    const body = req.body  
     try {
         // const user = await User.findOne({
         //     where: { email: body.email }

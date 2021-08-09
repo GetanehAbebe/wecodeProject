@@ -50,8 +50,8 @@ function NewRecipeForm({ match, recipeId, mode }) {
         .max(30).required(),
       // image: Yup.string().required("required"),
       ingredient: Yup.string().max(20).min(3).matches(/[a-z]/, 'must be letters in lowercase'),
-      diet: Yup.array().min(2, 'choose at least 2 types').required(),
-      category: Yup.array().min(2, 'choose at least 2 types').required(),
+      // diet: Yup.array().min(2, 'choose at least 2 types').required(),
+      // category: Yup.array().min(2, 'choose at least 2 types').required(),
       prepTimeMin: Yup.string(),
       description: Yup.string().min(3).max(150),
       source: Yup.string().min(3, 'min 3 charachters').max(40, 'must be 20 charachters or less').required('required')
@@ -61,6 +61,7 @@ function NewRecipeForm({ match, recipeId, mode }) {
       formik.values.guide = guide;
       formik.values.userId = Cookies.get('user')
       formik.values.instructions = instructions
+
       if (recipeId) formik.values.id = recipeId
       data.append("image", image)
       data.append("user", Cookies.get('user'))
@@ -69,8 +70,9 @@ function NewRecipeForm({ match, recipeId, mode }) {
         const response = await uploadRecipe(data)
       } else {
         const update = await updateRecipe(data)
+        submit()
       }
-      submit()
+
     },
 
   })
@@ -118,28 +120,36 @@ function NewRecipeForm({ match, recipeId, mode }) {
 
 
   const insertDataToForm = (recipe) => {
-    formik.values.name = recipe.recipe.name
-    formik.values.source = recipe.recipe.source
-    formik.values.sourceUrl = recipe.recipe.sourceUrl
-    formik.values.description = recipe.recipe.description
-    formik.values.isPrivate = !!recipe.recipe.isPrivate
-    formik.values.prepTimeMin = recipe.recipe.prepTimeMin
-    formik.values.image = recipe.images[0]?.url
+    console.log('recipe from insert into table',recipe)
+    // formik.values.name = recipe.recipe.name
+    // formik.values.source = recipe.recipe.source
+    // formik.values.sourceUrl = recipe.recipe.sourceUrl
+    // formik.values.description = recipe.recipe.description
+    // formik.values.isPrivate = !!recipe.recipe.isPrivate
+    // formik.values.prepTimeMin = recipe.recipe.prepTimeMin
+    // formik.values.image = recipe.images[0]?.url
+    formik.values.name = recipe.name
+    formik.values.source = recipe.source
+    formik.values.sourceUrl = recipe.sourceUrl
+    formik.values.description = recipe.description
+    formik.values.isPrivate = !!recipe.isPrivate
+    formik.values.prepTimeMin = recipe.prepTimeMin
+    // formik.values.image = recipe.images[0]?.url
     console.log(recipe.category);
     setImage(recipe.images[0]?.url)
     console.log(recipe.ingredients);
     setGuide(recipe.instructions)
     setInstructions(recipe.ingredients)
     const arr = []
-    for (let x of recipe.category) {
+    for (let x of recipe.categories) {
       console.log(x);
-      arr.push(+(x.categoryId))
+      arr.push(+(x.categoryId || x.id))
     }
     formik.values.category = arr
     const diets = []
-    for (let x of recipe.diet) {
+    for (let x of recipe.diets) {
 
-      diets.push(+(x.dietId))
+      diets.push(+(x.id || x.dietId))
     }
     formik.values.diet = diets;
   }
@@ -198,31 +208,34 @@ function NewRecipeForm({ match, recipeId, mode }) {
   useEffect(async () => {
     if (recipeId) {
       setEditMode(true)
-      const instruc = await ingredientsOfRecipe(recipeId)
+      // const instruc = await ingredientsOfRecipe(recipeId)
       const formRecipe = await getRecipeDetails(recipeId)
+
       insertDataToForm(formRecipe)
       console.log("instruc", formRecipe);
 
     }
     if (!Cookies.get('user')) history.push('/login')
-    const fetchIngredient = await getData('ingredients')
     const fetchDiets = await getData('diets')
+    console.log(fetchDiets)
     const fetchUnits = await getData('units')
     const fetchCategories = await getData('categories')
+    const fetchIngredient = await getData('ingredients')
     setDiets(fetchDiets.map(item => {
       return {
         select: formik.values.diet.includes(item.id),
         name: item.name,
-        id: item.id
+        id: item.id || item["_id"]
       }
     }));
     setUnits(fetchUnits);
     setIngredients(fetchIngredient);
     setCategories(fetchCategories.map(cat => {
+      console.log(formik.values.category)
       return {
         select: formik.values.category.includes(cat.id),
         name: cat.name,
-        id: cat.id
+        id: cat.id || cat["_id"]
       }
     }));
 
@@ -315,8 +328,8 @@ function NewRecipeForm({ match, recipeId, mode }) {
                                 type="checkbox"
                                 label={diet.name}
                                 name='diet'
-                                checked={diet.select}
-                                value={diet.id}
+                                checked={diet.id in formik.values.diet || diet.select}
+                                value={diet.id || diet["_id"]}
                                 onChange={(e) => {
                                   let checked = e.target.checked;
                                   setDiets(diets.map(item => {
@@ -341,7 +354,7 @@ function NewRecipeForm({ match, recipeId, mode }) {
                                 label={category.name}
                                 name='category'
                                 checked={category.select}
-                                value={category.id}
+                                value={category.id || category["_id"]}
                                 onChange={(e) => {
                                   let checked = e.target.checked;
                                   setCategories(categories.map(item => {
@@ -375,7 +388,7 @@ function NewRecipeForm({ match, recipeId, mode }) {
                   instructions.map((item, i) => (
                     <div key={i} className='d-flex ingredints mb-1'>
                       <div className='col-sm-2'>{item.quantity}</div>
-                      <div className='col-sm-4'>{units[item.measureUnit - 1]?.name}</div>
+                      <div className='col-sm-4'>{item.measureUnit || units[item.measureUnit - 1]?.name}</div>
                       <div className='col-sm-4'>{item.ingredient || item.name || ingredients[item.ingredient - 1]?.name}</div>
                       <i class="fas fa-trash text-sm" onClick={() => deleteInstruction(i)}> </i>
                     </div>
@@ -402,20 +415,6 @@ function NewRecipeForm({ match, recipeId, mode }) {
                     <Form.Label>Ingredient</Form.Label>
                     <Form.Control type="text" name="ingredient" value={formik.values}{...formik.getFieldProps("ingredient")} />
                     {formik.touched.ingredient && formik.errors.ingredient ? <small className='text-danger'>{formik.errors.ingredient} </small> : ""}
-
-                    {/* <select onChange={(e) => changeIngredient(e)} name='ingredient'>
-                      <option>---choose </option>
-                      {ingredients.length > 0 && ingredients.map((ingredient, i) => {
-                        return (
-                          <>
-                            <option key={i} value={ingredient.id} name={ingredient.name}>
-                              {ingredient.name}
-                            </option>
-                          </>
-                        );
-                      })}
-                    </select> */}
-
                   </Col>
                   <Col >
                     <Button
@@ -424,16 +423,6 @@ function NewRecipeForm({ match, recipeId, mode }) {
                       Save
                     </Button>
                   </Col>
-                  {/* <Row >
-                    <Button onClick={() => setAddIng(true)}> Add new Ingredint</Button>
-                  </Row> */}
-                  {/* {addIng && <div className='new-ing'>
-                    <Form.Label>Ingredint name</Form.Label>
-                    <Form.Control type="text"
-                      defailtValue={newIngredient}
-                      name="newingredient" onChange={(e) => setNewIngredient(e.target.value)} />
-                    <Button onClick={() => addIngtoDB()}>add</Button>
-                  </div>} */}
                 </Row>
               </>
             </Accordion.Collapse>
@@ -449,7 +438,7 @@ function NewRecipeForm({ match, recipeId, mode }) {
                 {guide.length > 0 &&
                   guide.map((item, i) => (
                     <div key={i} className='d-flex instruction'>
-                      <div className='text-left '>{item.instruction}</div>
+                      <div className='text-left col-sm-10 '>{item.instruction}</div>
                       <button onClick={() => deleteGuide(i)}
                         className='col-sm-2'>
                         <i class="fas fa-trash text-sm "></i>

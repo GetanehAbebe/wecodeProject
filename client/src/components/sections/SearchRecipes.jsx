@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
-
-import { Form, Col, Row, FormControl } from "react-bootstrap";
-import MyVerticallyCenteredModal from "../utills/Modal";
+import { Row, FormControl } from "react-bootstrap";
 import { getData } from '../DAL/api'
-import Pagination from "../utills/Pagination";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import App from "../Pages/Gallery";
-import Cards from "./Cards";
 import './SearchRecipes.css'
 const fetchData = require('../DAL/api')
 function SearchRecipes(props) {

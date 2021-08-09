@@ -163,8 +163,9 @@
 }
 
 @media screen and (max-width: 768px) {
-  .website-rights ,div.social-icons,div.website-rights{
+  .website-rights,
+  div.social-icons,
+  div.website-rights {
     display: none;
-    
   }
 }

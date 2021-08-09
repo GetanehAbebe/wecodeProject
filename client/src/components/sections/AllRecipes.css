@@ -21,9 +21,14 @@ h3 {
   margin: 0 auto;
   text-align: center;
 }
+#recipe-gallery-card {
+  max-width: 220px;
+  max-height: 350px;
+}
+
 .recipe {
   background: #f1f1f1;
-  max-width: 300px;
+  max-width: 350px;
   max-height: 350px;
   position: relative;
   display: inline-block;
@@ -42,7 +47,7 @@ h3 {
   position: relative;
 }
 .image img {
-  width: 100%;
+  width: 20rem;
   transition: all 1s ease;
   margin-top: -24px;
   height: 100%;
@@ -127,12 +132,7 @@ footer {
   color: #eb6dac;
   margin: 15px 0 0 0;
 }
-/* a:link,
-a:visited {
-  color: #339187;
-  text-decoration: none;
-  font-weight: 700;
-} */
+
 a:hover {
   color: #d61650;
   text-decoration: none;
@@ -180,15 +180,16 @@ h6 {
 }
 .navbar-collapse {
   margin-bottom: 1.3rem;
+  font-size: 2.3rem;
 }
 .recipe p {
   font-family: monospace;
 }
 .chip {
   background: rgb(24, 18, 18) !important;
-
 }
-.highlightOption,.highlightOption * {
+.highlightOption,
+.highlightOption * {
   background: #5f696f !important;
-  color: #fff !important;
+  color: #fff;
 }

@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 
 import { useState } from "react";
-import Cart from "../Pages/Cart/Cart";
+
 
 function MyVerticallyCenteredModal(props) {
   const [openEditForm, setOpenEditform] = useState(false);
@@ -78,7 +78,7 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Footer>
         <Button onClick={props.onHide}>חזור</Button>
         <Button onClick={() => edit()}>ערוך</Button>
-        <Button className="btn btn-success" onClick={<Cart cartList={list} />}>
+        <Button className="btn btn-success" >
           {" "}
           הוסף מצרכים לעגלה
         </Button>

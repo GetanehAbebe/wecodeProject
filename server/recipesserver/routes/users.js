@@ -79,14 +79,19 @@ const updateUser = async (req, res) => {
   res.send('updated')
 }
 
+
 const signUp = async (req, res) => {
-  const body = req.body.values
+  const body = req.body
   try {
     const { firstName, lastName, email, password } = body
+    console.log('sss', body);
+    const hash = await bcrypt.hash(password, 10)
     const response = await User.create({
-      email, password,
-      firstName, lastName
+      email,
+      firstName, lastName,
+      password: hash
     })
+
     res.send(response.id)
 
   } catch (err) {
@@ -103,17 +108,21 @@ const login = async (req, res) => {
     }
   })
   if (user) {
-    if (user.password === password) {
-      res.cookie('userId', '123321')
-      res.status(200).send(user);
+    const passValues = await bcrypt.compare(password, user.password)
+    console.log('passvalue', passValues);
+    if (passValues) {
+      res.cookie('userId', '123321', { maxAge: 900000, httpOnly: true })
+      res.send(user);
     } else {
-      console.log('Wrong username/password combination!');
       res.send({ message: "Wrong email/password combination!" });
     }
   } else {
     res.send({ message: "User doesn't exist" });
   }
 }
+
+
+
 
 router.route("/")
   .get(getAllUsers).put(updateUser)

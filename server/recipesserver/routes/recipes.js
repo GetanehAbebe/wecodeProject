@@ -143,7 +143,7 @@ const getSpecificRecipe = async (req, res) => {
           model: Ingredient, attributes: [["name", "ingredient"]],
 
         },
-        
+
 
       ]
     })
@@ -160,7 +160,6 @@ const awaitToRcipe = async (req, res) => {
   res.json(response)
 }
 
-
 const category = async (req, res) => {
   const response = await categoryOfRecipe(req.body.id)
   res.send(response)
@@ -170,7 +169,6 @@ const diet = async (req, res) => {
   const response = await dietOfRecipe(req.body.id)
   res.send(response)
 }
-
 
 
 const mostPopular = async (req, res) => {
@@ -193,6 +191,7 @@ const mostPopular = async (req, res) => {
 
   }
 }
+
 
 const deleteRecipe = async (req, res) => {
   const id = req.body.recipeId
@@ -232,7 +231,6 @@ const deleteRecipe = async (req, res) => {
     where: {
       id: id
     }
-
   })
   res.send('deleted')
 };
@@ -276,22 +274,16 @@ router.post("/upload", upload.single('image'), async (req, res) => {
 
     for (const prop of values.instructions) {
       console.log(prop.measureUnit);
-      // console.log(getId(prop.ingredient), 'awa')
-
-      const check = await Ingredient.findAll({
+        const check = await Ingredient.findAll({
         where: {
           name: prop.ingredient
         }
-
       })
       console.log('check', check[0]);
       let name = prop.ingredient
       console.log('props', prop.ingredient);
 
       if (check.length === 0) {
-        // if (name[name.length - 1] === 's') name = name.slice(0, name.lemgth - 1)
-        // console.log(name);
-
         const ing = await Ingredient.create({
           name: name
         })
@@ -328,6 +320,7 @@ const myRecipes = async (req, res) => {
   res.send(response)
 }
 
+
 router.post("/update", upload.single('image'), async (req, res) => {
   console.log(req.body, req.file);
   const values = JSON.parse(req.body.recipe);
@@ -350,14 +343,11 @@ router.post("/update", upload.single('image'), async (req, res) => {
       recipeId: values.id
     }
   })
-
   const destroyCategory = await RecipeCategory.destroy({
     where: {
       recipeId: values.id
     }
   })
-  console.log(destroyCategory);
-
   const destroyDiets = await RecipeDiet.destroy({
     where: {
       recipeId: values.id
@@ -368,21 +358,13 @@ router.post("/update", upload.single('image'), async (req, res) => {
       recipeId: values.id
     }
   })
-
-
   for (const prop of values.category) {
     await RecipeCategory.create({ recipeId: values.id, categoryId: prop })
   }
   for (const prop of values.diet) {
     await RecipeDiet.create({ recipeId: values.id, dietId: prop })
   }
-  // for (const prop of values.instructions) {
-  //   console.log(prop.measureUnit);
-  //   await RecipeIngredient.create({
-  //     recipeId: values.id, ingredientId: prop.ingredient,
-  //     unitId: prop.measureUnit, quantity: prop.quantity
-  //   })
-  // }
+
   for (const prop of values.guide) {
     await Instruction.create({ recipeId: values.id, instruction: prop.instruction })
   }
@@ -396,13 +378,10 @@ router.post("/update", upload.single('image'), async (req, res) => {
   }
   for (const prop of values.instructions) {
     console.log('measureUnit', prop.ingredient);
-    // console.log(getId(prop.measureUnit), 'awa')
-
     const check = await Ingredient.findAll({
       where: {
         name: prop.ingredient
       }
-
     })
     console.log('check', check[0]);
     let name = prop.ingredient
@@ -424,8 +403,8 @@ router.post("/update", upload.single('image'), async (req, res) => {
     }
   }
   res.send('updated')
-
 })
+
 
 
 router.route("/").get(getAllRecipes)
@@ -435,7 +414,7 @@ router.route("/increment").post(incrementView)
 router.route("/diet").post(diet);
 router.route("/category").post(category);
 router.route("/myrecipes").post(myRecipes);
-router.route("/popular").post(mostPopular);
+router.route("/popular").get(mostPopular);
 router.route("/ingredient").post(recipeIngrediens);
 router.route('/delete').post(deleteRecipe)
 router

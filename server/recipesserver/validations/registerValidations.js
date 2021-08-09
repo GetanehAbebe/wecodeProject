@@ -15,7 +15,7 @@ const userSchema = Yup.object({
     // .required('Password is required'),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Password must match').required('Confirm password is required'),
-    diet: Yup.array().min(2)
+    // diet: Yup.array().min(2)
 })
 
 module.exports = userSchema

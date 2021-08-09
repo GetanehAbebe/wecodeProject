@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { Row, Form } from "react-bootstrap";
-import validateInfo from "../utills/validateInfo";
 import { getUsers, login, getSpecificUser, sendPutReq } from "../DAL/api";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import AuthApi from "../context/AuthApi";
-
+import { Button } from 'react-bootstrap'
 import Cookies from 'js-cookie'
 function Login() {
   const Auth = useContext(AuthApi)
@@ -29,31 +28,14 @@ function Login() {
         console.log('getaneh', response);
         console.log('user response', response);
         Auth.setAuth(true)
-        Cookies.set("user", response.id)
-        history.push('/myrecipes')
+        Cookies.set("user", response.id || response["_id"])
+        history.push('/')
       }
       else {
         setMessage(response.message);
       }
     }
-    if (isLoged) {
-      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/.test(password)) {
-        setErrors({ ...errors, password: 'Invalid pssword' })
-      } else {
-        setErrors({ ...errors, password: null })
-      }
-      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-        setErrors({ ...errors, email: 'inValid email' })
-      } else {
-        setErrors({ ...errors, email: null })
-      }
-      if (!errors.email && !errors.password) {
-        const id = Cookies.get("user")
-        console.log(email, password, id);
-        console.log(errors);
-        sendPutReq(email, password, id)
-      }
-    }
+
 
   }
   const userDetails = async () => {
@@ -102,18 +84,15 @@ function Login() {
           defaultValue={password}
         />
         {errors.password && <li>{errors.password}</li>}
-        <Row>
-          <button
-            className="btn btn-primary my-2 text-right font-weight-bold "
-            onClick={onSubmit}
-            type='submit'
-          >
-            {!isLoged ? "Login" : "edit"}
-          </button>
-          <div className="d-flex m-auto">
-            {!isLoged && <Link to="/sign-up" className='row-sm-9'> Create New Acount </Link>}
-          </div>
-        </Row>
+
+        <Button
+          className="btn btn-primary my-2  font-weight-bold"
+          onClick={onSubmit}
+          type='submit'
+        >
+          {!isLoged ? "Login" : "edit"}
+        </Button>
+        {!isLoged && <Link to="/sign-up" className='row-sm-9 m-auto'> Create New Acount </Link>}
       </div>
     </Form>
   );

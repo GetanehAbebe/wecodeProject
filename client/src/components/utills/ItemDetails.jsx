@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import { Modal, ListGroupItem, Button, Image } from "react-bootstrap";
 import { Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Details from './Details'
 import "./Carousel.css";
 import "./ItemDetails.css";
-import { getRecipeIngredients, getData, getRecipeDetails, incrementView } from "../DAL/api";
+import { getRecipeDetails, incrementView } from "../DAL/api";
 const fetchData = require('../DAL/api')
 const Cookies = require('js-cookie')
 function ItemDetails(props) {
   const { match } = props
-  const [item, setItem] = useState([]);
+  const [item, setItem] = useState('');
   const [userId, setUserId] = useState(null)
   const [instructions, setInstructions] = useState([]);
   const [ingredients, setIngredients] = useState([]);
@@ -34,73 +33,71 @@ function ItemDetails(props) {
   return (
     <>
 
-      {item.recipe && <div className='text-center mt-5'>
+      {!!item && <div className='text-center mt-5 product'>
         <div className="row mx-2 mt-3" >
           <div className="col-sm-12 col-md-6">
-            <h1 className='text-justify mt-2'>{item.recipe.name}</h1>
+            <h1 className='text-justify mt-2'>{item.name || item.recipe.name}</h1>
             <figure>
-              <img src={`http://localhost:3200/${item.images[0]?.url}`} alt={item.recipe.name} />
+              {/* <img src={require(`./public/uploads/WeCode-Rotterdam-vresized-ready.jpg`)} /> */}
+              <img src={`http://localhost:3200/${item.images}`} />
               {/* <figcaption>{item.recipe.name}'s image</figcaption> */}
             </figure>
           </div>
           <div className='col-sm-12 mt-5 text-left col-md-5'>
-            <p className='text-left'>{item.recipe.description}</p>
+            <p className='text-left'>{item.description || item.recipe.description}</p>
 
             <p className='text-left'>Categories:</p>
             <ul className='d-flex text-left'>
-              {item.category?.map(category => {
+              {item.categories?.map(category => {
                 return <li className='mx-2'>{category.name}  </li>
               })}
             </ul>
             <p className='text-left'>Diets:</p>
             <ul className='d-flex'>
-              {item.diet?.map(category => {
+              {item.diets?.map(category => {
                 return <li className='mx-2'>{category.name}  </li>
               })}
             </ul>
             <ul className='text-left'>
-              <li className='text-left'>⏱ preparation time: {item.recipe.prepTimeMin} minutes</li>
+              <li className='text-left'>⏱ preparation time: {item.prepTimeMin || item.recipe.prepTimeMin} minutes</li>
             </ul>
-            <ul className='text-left'>
+            {/* <ul className='text-left'>
               <li className='text-left'><i class="fas fa-calendar-alt"></i> Upload date: {(item.recipe.createdAt).slice(0, 10).split(' ').reverse().join(' ')}</li>
-            </ul>
+            </ul> */}
 
           </div>
+        </div>
+
+
+        <div className='row '>
+          <div className="col-sm-5 mx-2 ">
+            <div>
+              <h2 data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Ingredients <i className="fas fa-angle-down"></i></h2>
+              <ul className="instructions text-left collapse pl-5" id='collapseExample'>
+                {item.ingredients && item.ingredients.map((ingredient, i) => {
+                  return <li key={i}><span>{ingredient.quantity} {ingredient.id || ingredient.measureUnit} {ingredient.ingredient}  </span></li>
+                })
+                }
+              </ul>
+            </div>
+          </div>
+          < div className="col-sm-5">
+            <h2 data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">Method <i className="fas fa-angle-down"></i></h2>
+            <ol className="instructions collapse pl-5" id='collapseExample2'>
+              {item.instructions && item.instructions.map((instruct, i) => {
+                return <li key={i}><span>{i + 1} - {instruct.instruction}</span></li>
+              })
+              }
+              {/* {item.recipe && (item.recipe.createdAt).slice(0, 10)} */}
+              <p className="last">😋 Buon Appetito!</p>
+            </ol>
+
+          </div>
+
         </div>
       </div>
 
       }
-
-      <div className='row'>
-        <div className="col-sm-5 mx-2">
-          <div>
-            <h2 data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Ingredients <i class="fas fa-angle-down"></i></h2>
-            <ul className="ingredients text-left collapse" id='collapseExample'>
-              {item.ingredients && item.ingredients.map((ingredient, i) => {
-                return <li key={i}><span>{ingredient.quantity} {ingredient.id} {ingredient.ingredient}  </span></li>
-              })
-              }
-            </ul>
-          </div>
-        </div>
-        < div className="col-sm-5">
-          <h2 data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">Method <i class="fas fa-angle-down"></i></h2>
-
-          <ol className="instructions collapse" id='collapseExample2'>
-
-            {item.instructions && item.instructions.map((instruct, i) => {
-              return <li key={i}><span>{instruct.instruction}</span></li>
-            })
-            }
-            {item.recipe && (item.recipe.createdAt).slice(0, 10)}
-            <p className="last">😋 Buon Appetito!</p>
-          </ol>
-
-
-
-        </div>
-
-      </div>
     </>
   );
 }

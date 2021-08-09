@@ -1,19 +1,7 @@
-/* .navbar {
-  background: transparent;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  box-shadow: 5px 10px 30px rgba(0, 0, 0, 0.336);
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  z-index: 1;
-  background-color: #fff;
-} */
+
 .navbar * {
   /* color: #e33d26 !important; */
-  font-size: 1rem;
+  font-size: 1.4rem;
   margin-top: 0px;
   padding: auto;
 }
@@ -444,20 +432,20 @@ body.hero-anime #switch {
   background-color: rgba(129, 103, 169, 0.6);
 }
 
-body.dark {
+.dark {
   color: #fff;
   background-color: #1f2029;
 }
-body.dark .navbar-brand img {
+.dark .navbar-brand img {
   filter: brightness(100%);
 }
-body.dark h1 {
+.dark h1 {
   color: #fff;
 }
-body.dark h1 span {
+.dark h1 span {
   transition-delay: 0ms !important;
 }
-body.dark p {
+.dark p {
   color: #fff;
   transition-delay: 0ms !important;
 }

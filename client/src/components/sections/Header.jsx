@@ -6,11 +6,9 @@ import { Button } from "react-bootstrap";
 import SearchRecipes from "./SearchRecipes";
 function Header() {
   return (
-
     <div className="hero-container">
       <h3>search,find and Cook&Eat</h3>
-      {/* <video src="../images/video1.mp4" autoPlay loop muted /> */}
-      <div className='w-75'>
+      <div className='w-50'>
         <SearchRecipes />
       </div>
     </div>
